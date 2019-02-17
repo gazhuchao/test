@@ -1,0 +1,419 @@
+﻿https://ec2-34-220-208-106.us-west-2.compute.amazonaws.com/ui
+
+#TMSH-VERSION: 11.5.3
+
+cm cert /Common/dtca-bundle.crt {
+    cache-path /config/filestore/files_d/Common_d/trust_certificate_d/:Common:dtca-bundle.crt_28852_22
+    checksum SHA1:1302:feaa2e060714d11bc2e2751dd297ed6b1ac3e52a
+    revision 22
+}
+cm cert /Common/dtca.crt {
+    cache-path /config/filestore/files_d/Common_d/trust_certificate_d/:Common:dtca.crt_28848_2
+    checksum SHA1:1302:feaa2e060714d11bc2e2751dd297ed6b1ac3e52a
+    revision 2
+}
+cm cert /Common/dtdi.crt {
+    cache-path /config/filestore/files_d/Common_d/trust_certificate_d/:Common:dtdi.crt_28844_2
+    checksum SHA1:1269:07724929373ca9398360cfb1bc5e02ebffa6931b
+    revision 2
+}
+cm device /Common/bigip1.f5gz.com {
+    active-modules { "APM, Max CCU, 3900|YUTLGNZ-OSTXEQM|Max Compression|Anti-Virus Checks|Base Endpoint Security Checks|Firewall Checks|Network Access|Secure Virtual Keyboard|APM, Web Application|Machine Certificate Checks|Protected Workspace|Remote Desktop|App Tunnel" "Global Traffic Manager Module|GUGMYOI-CIKYYLP|STP|GTM, DNS LB|GTM, DNS LB, MAX|GTM Licensed Objects, Unlimited|DNS Rate Fallback, Unlimited|DNS Licensed Objects, Unlimited|GTM Rate Fallback, (UNLIMITED)|DNS Rate Limit, Unlimited QPS|GTM Rate, Unlimited" "LTM, Base, 3900|XTWTXHR-NATQKFZ|Application Acceleration Manager, Core|LTM, Base|IPV6 Gateway|Rate Shaping|Ram Cache|50 MBPS COMPRESSION|Max Compression|Anti-Virus Checks|Base Endpoint Security Checks|Firewall Checks|Network Access|Secure Virtual Keyboard|APM, Web Application|Machine Certificate Checks|Protected Workspace|Remote Desktop|App Tunnel|DNS Rate Fallback, Unlimited|DNS Licensed Objects, Unlimited|DNS Rate Limit, Unlimited QPS" }
+    base-mac 00:23:e9:89:2e:c0
+    build 0.0.163
+    cert /Common/dtdi.crt
+    chassis-id f5-tkfg-ugkl
+    edition Final
+    hostname bigip1.f5gz.com
+    key /Common/dtdi.key
+    management-ip 192.168.2.245
+    marketing-name "BIG-IP 3900"
+    optional-modules { "Acceleration Manager" "Acceleration Manager, 3900" "ADC, Security Bundle, 3900" "AFM, 3900" "APM, 500 CCU" "APM, Base CCU, 3900" "App Mode (TMSH Only, No Root/Bash)" "ASM, Bundle, 3900" "ASM, PSM to ASM Upgrade" "ASM, Unlimited" "BIG-IP, DNS (Max)" "Client Authentication" "DNS Services" DNSSEC "External Interface and Network HSM" "IP Intelligence, 1Yr, 3900/4XXX/i4XXX" "IP Intelligence, 3Yr, 3900/4XXX/i4XXX" "Link Controller" "Max Compression" MSM "PEM, 3900" PSM "Routing Bundle" "SDN Services" "Secure Web Gateway, 1Yr, 4XXX/i4XXX" "Secure Web Gateway, 3Yr, 4XXX/i4XXX" "SSL, Forward Proxy" "SSL, Max TPS" "URL Filtering, 1Yr, 4XXX/i4XXX" "URL Filtering, 3Yr, 4XXX/I4XXX" WBA "WBA, Bundle, 3900" WOM "WOM, Bundle, 3900" }
+    platform-id C106
+    product BIG-IP
+    self-device true
+    time-zone CST
+    version 11.5.3
+}
+cm device-group /Common/device_trust_group {
+    auto-sync enabled
+    devices {
+        /Common/bigip1.f5gz.com { }
+    }
+    hidden true
+    network-failover disabled
+}
+cm device-group /Common/gtm {
+    devices {
+        /Common/bigip1.f5gz.com { }
+    }
+    hidden true
+    network-failover disabled
+}
+cm key /Common/dtca.key {
+    cache-path /config/filestore/files_d/Common_d/trust_certificate_key_d/:Common:dtca.key_28850_2
+    checksum SHA1:1675:86ff156ff8b67fe6aad0d459f1e9b2f5d79e0955
+    revision 2
+}
+cm key /Common/dtdi.key {
+    cache-path /config/filestore/files_d/Common_d/trust_certificate_key_d/:Common:dtdi.key_28846_2
+    checksum SHA1:1679:ce3952081c73e866b40ee06e6d1548e0d081aacb
+    revision 2
+}
+cm traffic-group /Common/traffic-group-1 {
+    unit-id 1
+}
+cm traffic-group /Common/traffic-group-local-only { }
+cm trust-domain /Common/Root {
+    ca-cert /Common/dtca.crt
+    ca-cert-bundle /Common/dtca-bundle.crt
+    ca-devices { /Common/bigip1.f5gz.com }
+    ca-key /Common/dtca.key
+    guid 2cedac5c-e6f5-4a03-b2b10023e9892ec1
+    status standalone
+    trust-group /Common/device_trust_group
+}
+net route-domain /Common/0 {
+    id 0
+    vlans {
+        /Common/vlan_internal
+        /Common/vlan_internet
+        /Common/vlan_internal_03
+        /Common/http-tunnel
+        /Common/socks-tunnel
+        /Common/f5gz_cp_0
+    }
+}
+net self /Common/self_3 {
+    address 192.168.3.250/24
+    allow-service {
+        default
+    }
+    traffic-group /Common/traffic-group-local-only
+    vlan /Common/vlan_internal_03
+}
+net self /Common/self_internal {
+    address 192.168.1.250/24
+    allow-service all
+    traffic-group /Common/traffic-group-local-only
+    vlan /Common/vlan_internal
+}
+net self /Common/self_internet {
+    address 183.62.244.210/24
+    allow-service {
+        default
+    }
+    traffic-group /Common/traffic-group-local-only
+    vlan /Common/vlan_internet
+}
+net self-allow {
+    defaults {
+        ospf:0
+        tcp:161
+        tcp:22
+        tcp:4353
+        tcp:443
+        tcp:53
+        udp:1026
+        udp:161
+        udp:4353
+        udp:520
+        udp:53
+    }
+}
+net stp /Common/cist {
+    interfaces {
+        1.1 {
+            external-path-cost 20000
+            internal-path-cost 20000
+        }
+        1.2 {
+            external-path-cost 20000
+            internal-path-cost 20000
+        }
+        1.3 {
+            external-path-cost 20000
+            internal-path-cost 20000
+        }
+        1.4 {
+            external-path-cost 20000
+            internal-path-cost 20000
+        }
+        1.5 {
+            external-path-cost 20000
+            internal-path-cost 20000
+        }
+        1.6 {
+            external-path-cost 20000
+            internal-path-cost 20000
+        }
+        1.7 {
+            external-path-cost 20000
+            internal-path-cost 20000
+        }
+        1.8 {
+            external-path-cost 20000
+            internal-path-cost 20000
+        }
+        2.1 {
+            external-path-cost 20000
+            internal-path-cost 20000
+        }
+        2.2 {
+            external-path-cost 20000
+            internal-path-cost 20000
+        }
+        2.3 {
+            external-path-cost 20000
+            internal-path-cost 20000
+        }
+        2.4 {
+            external-path-cost 20000
+            internal-path-cost 20000
+        }
+    }
+    vlans {
+        /Common/vlan_internal
+        /Common/vlan_internal_03
+        /Common/vlan_internet
+    }
+}
+net stp-globals {
+    config-name 00-23-E9-89-2E-C0
+}
+net vlan /Common/vlan_internal {
+    interfaces {
+        1.4 { }
+        1.5 { }
+        1.6 { }
+        1.7 { }
+        1.8 { }
+        2.1 { }
+        2.2 { }
+        2.3 { }
+        2.4 { }
+    }
+    tag 4093
+}
+net vlan /Common/vlan_internal_03 {
+    interfaces {
+        1.1 { }
+        1.3 { }
+    }
+    tag 4092
+}
+net vlan /Common/vlan_internet {
+    interfaces {
+        1.2 { }
+    }
+    tag 4094
+}
+net fdb tunnel /Common/f5gz_cp_0 { }
+net fdb tunnel /Common/http-tunnel { }
+net fdb tunnel /Common/socks-tunnel { }
+net fdb vlan /Common/vlan_internal { }
+net fdb vlan /Common/vlan_internal_03 { }
+net fdb vlan /Common/vlan_internet { }
+net tunnels tunnel /Common/f5gz_cp_0 {
+    profile /Common/ppp
+}
+net tunnels tunnel /Common/http-tunnel {
+    description "Tunnel for http-explicit profile"
+    profile /Common/tcp-forward
+}
+net tunnels tunnel /Common/socks-tunnel {
+    description "Tunnel for socks profile"
+    profile /Common/tcp-forward
+}
+security firewall port-list /Common/_sys_self_allow_tcp_defaults {
+    ports {
+        22 { }
+        53 { }
+        161 { }
+        443 { }
+        1029-1043 { }
+        4353 { }
+    }
+}
+security firewall port-list /Common/_sys_self_allow_udp_defaults {
+    ports {
+        53 { }
+        161 { }
+        520 { }
+        1026 { }
+        4353 { }
+    }
+}
+security firewall rule-list /Common/_sys_self_allow_all {
+    rules {
+        _sys_allow_all {
+            action accept
+        }
+    }
+}
+security firewall rule-list /Common/_sys_self_allow_defaults {
+    rules {
+        _sys_allow_tcp_defaults {
+            action accept
+            ip-protocol tcp
+            destination {
+                port-lists {
+                    /Common/_sys_self_allow_tcp_defaults
+                }
+            }
+        }
+        _sys_allow_udp_defaults {
+            action accept
+            ip-protocol udp
+            destination {
+                port-lists {
+                    /Common/_sys_self_allow_udp_defaults
+                }
+            }
+        }
+        _sys_allow_ospf_defaults {
+            action accept
+            ip-protocol ospf
+        }
+    }
+}
+security firewall rule-list /Common/_sys_self_allow_management {
+    rules {
+        _sys_allow_ssh {
+            action accept
+            ip-protocol tcp
+            destination {
+                ports {
+                    22 { }
+                }
+            }
+        }
+        _sys_allow_web {
+            action accept
+            ip-protocol tcp
+            destination {
+                ports {
+                    443 { }
+                }
+            }
+        }
+    }
+}
+security ip-intelligence policy /Common/ip-intelligence { }
+sys dns {
+    name-servers { 202.96.128.86 }
+}
+sys feature-module cgnat {
+    disabled
+}
+sys folder / {
+    device-group none
+    hidden false
+    inherited-devicegroup false
+    inherited-traffic-group false
+    traffic-group /Common/traffic-group-1
+}
+sys folder /Common {
+    device-group none
+    hidden false
+    inherited-devicegroup true
+    inherited-traffic-group true
+    traffic-group /Common/traffic-group-1
+}
+sys folder /Common/EPSEC {
+    device-group none
+    hidden false
+    inherited-devicegroup true
+    inherited-traffic-group true
+    traffic-group /Common/traffic-group-1
+}
+sys folder /Common/EPSEC/Status {
+    device-group none
+    hidden false
+    inherited-devicegroup true
+    inherited-traffic-group true
+    traffic-group /Common/traffic-group-1
+}
+sys folder /Common/EPSEC/Upload {
+    device-group none
+    hidden false
+    inherited-devicegroup true
+    inherited-traffic-group true
+    traffic-group /Common/traffic-group-1
+}
+sys global-settings {
+    gui-setup disabled
+    hostname bigip1.f5gz.com
+}
+sys httpd {
+    auth-pam-idle-timeout 12000
+}
+sys management-dhcp /Common/sys-mgmt-dhcp-config {
+    request-options { subnet-mask broadcast-address routers domain-name domain-name-servers host-name ntp-servers }
+}
+sys management-ip 192.168.2.245/24 { }
+sys ntp {
+    servers { 202.112.29.82 }
+    timezone Asia/Shanghai
+}
+sys provision apm {
+    level nominal
+}
+sys provision ltm {
+    level nominal
+}
+sys snmp {
+    agent-addresses { tcp6:161 udp6:161 }
+    allowed-addresses { 127. 192.168.1.177 192.168.1.4 }
+    communities {
+        /Common/comm-public {
+            community-name public
+            source default
+        }
+    }
+    disk-monitors {
+        /Common/root {
+            minspace 2000
+            path /
+        }
+        /Common/var {
+            minspace 10000
+            path /var
+        }
+    }
+    process-monitors {
+        /Common/bigd {
+            process bigd
+        }
+        /Common/chmand {
+            process chmand
+        }
+        /Common/httpd {
+            max-processes infinity
+            process httpd
+        }
+        /Common/mcpd {
+            process mcpd
+        }
+        /Common/sod {
+            process sod
+        }
+        /Common/tmm {
+            max-processes infinity
+            process tmm
+        }
+    }
+}
+sys syslog {
+    remote-servers {
+        /Common/remotesyslog1 {
+            host 192.168.1.177
+            remote-port 5140
+        }
+    }
+}
+sys daemon-log-settings mcpd {
+    audit enabled
+}
+sys sflow global-settings http { }
+sys sflow global-settings vlan { }
